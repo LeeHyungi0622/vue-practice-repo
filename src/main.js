@@ -4,7 +4,7 @@ import vuetify from './plugins/vuetify'
 import axios from 'axios'
 
 Vue.config.productionTip = false
-Vue.prototype.$http = axios
+Vue.prototype.$axios = axios
 
 new Vue({
     vuetify,

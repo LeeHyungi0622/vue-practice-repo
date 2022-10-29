@@ -28,6 +28,18 @@
       <v-row>
         <h3>(2) 입력한 값이 서버에 있는 값인지 아닌지 확인해서 에러 메시지 출력</h3>
       </v-row>
+      <v-row>
+        서버 내 사용자 정보 리스트 출력 
+        <v-container>
+          <v-data-table
+            :headers="headers"
+            :items="tableListItems"
+            :items-per-page="5"
+            class="elevation-1"
+          >
+          </v-data-table>
+        </v-container>
+      </v-row>
     </v-container>
   </v-app>
 </template>
@@ -39,11 +51,21 @@ export default {
 
   components: {
   },
-
+  mounted() {
+    this.fetchInitialEmployeeDataSet();
+  },
   data: () => ({
+    headers: [     
+      {text: 'ID', value: 'id'}, 
+      {text: 'NAME', value: 'name'}, 
+      {text: 'GENDER', value: 'gender'}, 
+      {text: 'ADDRESS', value: 'address'}, 
+      {text: 'DATE OF BIRTH', value: 'dateOfBirth'}
+    ],
     selectedComboboxValue: '(public) 공용 마트',
     filteredComboboxValue: '',
-    comboBoxItems: ['(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3']
+    comboBoxItems: ['(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3'],
+    tableListItems: []
   }),
   methods: {
     // 우선 기존에 객체 형태로 combobox에 출력하던 부분을 위와 같이 문자열 리스트 형태로
@@ -54,6 +76,29 @@ export default {
       const filteredSelectedComboboxVal = this.selectedComboboxValue.split(' ')[0].replace('(',"").replace(")","");
       this.filteredComboboxValue = filteredSelectedComboboxVal;
       console.log('Length of filtered item is ', this.filteredComboboxValue.length);
+    },
+    fetchInitialEmployeeDataSet: function() {
+      this.$axios.get('http://localhost:8080/employee')
+        .then(response => {
+          console.log('response::', response);
+          let items = []
+
+          response.data.forEach(item => {
+            const sItem = {
+              id: item.id,
+              name: item.name,
+              gender: item.gender,
+              address: item.address,
+              dateOfBirth: item.dateOfBirth
+            }
+            items.push(sItem);
+          })
+
+          this.tableListItems = items;
+        })
+        .catch(error => {
+          console.log('error:', error);
+        })
     }
   }
 };

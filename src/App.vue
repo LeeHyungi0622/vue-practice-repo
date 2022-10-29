@@ -35,7 +35,7 @@ export default {
   },
 
   data: () => ({
-    selectedComboboxValue: '',
+    selectedComboboxValue: '(public) 공용 마트',
     filteredComboboxValue: '',
     comboBoxItems: ['(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3']
   }),

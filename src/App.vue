@@ -28,6 +28,18 @@
       <v-row>
         <h3>(2) 입력한 값이 서버에 있는 값인지 아닌지 확인해서 에러 메시지 출력</h3>
       </v-row>
+      <v-row class="d-flex flex-column">
+        <v-column>
+          <v-text-field
+            v-model="searchValue"
+            :rules="[rules.required, checkInputValueValidation]"
+          >
+          </v-text-field>
+        </v-column> 
+        <v-column>
+          <v-btn @click="clickValidationBtn">VALIDATION CHECK</v-btn>
+        </v-column>
+      </v-row>
       <v-row>
         서버 내 사용자 정보 리스트 출력 
         <v-container>
@@ -53,8 +65,10 @@ export default {
   },
   mounted() {
     this.fetchInitialEmployeeDataSet();
+    this.checkExistenceOfEmployee();
   },
   data: () => ({
+    searchValue: '', 
     headers: [     
       {text: 'ID', value: 'id'}, 
       {text: 'NAME', value: 'name'}, 
@@ -62,6 +76,9 @@ export default {
       {text: 'ADDRESS', value: 'address'}, 
       {text: 'DATE OF BIRTH', value: 'dateOfBirth'}
     ],
+    rules: {
+      required: value => !!value || '값을 입력해주세요.',
+    },
     selectedComboboxValue: '(public) 공용 마트',
     filteredComboboxValue: '',
     comboBoxItems: ['(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3'],
@@ -99,6 +116,36 @@ export default {
         .catch(error => {
           console.log('error:', error);
         })
+    },
+    checkExistenceOfEmployee: function() {
+      const employeeList = this.tableListItems;
+      console.log('employeeList in checkExistenceOfEmployee method::', employeeList);
+    },
+    checkInputValueValidation: function(val) {
+      // validation check를 할때에는 우선 해당 페이지, Pop-up dialog component
+      // 초기 load시에 체크하고자 하는 항목의 모든 데이터 리스트를 받아서 data 내에 stateful variable로써 등록한다.
+      // component가 기본적으로 초기 load되었을때, 값을 DB에서 가져왔기 때문에 해당 값을 이용해서 별도의 method에서 
+      // 활용할 수 있다. 
+
+      // 예시) 입력한 데이터 모델의 문자열 값이 현재 서버에 존재하는 데이터 모델명인지 입력하는 실시간으로 확인을 하고자 한다면,
+      // 팝업 다이얼로그 로드시에 서버로부터 모든 데이터 모델 리스트를 가져와서 component 내의 date에 stateful variable로써 등록하도록 한다.
+      // 등록된 변수를 활용해서 rules에 별도로 custom variable을 등록하도록 한다.
+      
+      // 입력할때마다 서버로 request를 보내게 되면 서버에 부하를 줄 수 있다.
+      console.log('Validation button is clicked');
+      const listItems = this.tableListItems;
+      console.log('check list items in validation btn click event::', listItems);
+
+      for(const item of listItems) {
+        console.log('compare ',val,' with', item.name);
+        if(val == item.name) {
+          return true;
+        }
+      } 
+      return "Database에 있는 사용자를 입력해주세요.";
+    },
+    clickValidationBtn: function() {
+      console.log('validation check button is clicked');
     }
   }
 };

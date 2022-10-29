@@ -5,6 +5,9 @@
         <h1>[Vuetify component test page]</h1>       
       </v-row>
       <v-row>
+        <v-row class="pl-4 pt-8">
+          <h3>(1) v-combobox에 출력되는 값을 Customize하고, 서버로 query string을 보낼때 어떤 식으로 처리할지에 대한 테스트</h3>
+        </v-row>
         <v-combobox
           v-model="selectedComboboxValue"
           :items="comboBoxItems"
@@ -21,6 +24,9 @@
       </v-row>
       <v-row class="pt-4 pb-4">
         Filtered selected value is {{ filteredComboboxValue }}
+      </v-row>
+      <v-row>
+        <h3>(2) 입력한 값이 서버에 있는 값인지 아닌지 확인해서 에러 메시지 출력</h3>
       </v-row>
     </v-container>
   </v-app>

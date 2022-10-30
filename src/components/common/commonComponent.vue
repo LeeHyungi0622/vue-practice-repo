@@ -21,8 +21,7 @@ export default {
     },
     
     mounted() {
-        const filteredVal = this.selectedValue.split(' ')[0].replace('(','').replace(')','');
-        this.$emit('update-selected-value', filteredVal + ' [from child component]');
+        this.emitMethod();
     },
 
     data: () => ({
@@ -30,13 +29,12 @@ export default {
         comboBoxItems: ['(public) 공용 마트', '(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3']
     }),
     methods: {
-        onSelectionChange: function() {
-            // console.log('this.selectedValue :: ', this.selectedValue.split(" ")[0].replace("(", "").replace(")", ""));
+        emitMethod: function() {
             const filteredVal = this.selectedValue.split(' ')[0].replace('(','').replace(')','');
-
-            console.log('filteredVal::', filteredVal);
-
             this.$emit('update-selected-value', filteredVal + ' [from child component]');
+        },
+        onSelectionChange: function() {
+            this.emitMethod();
         }
     },
 }

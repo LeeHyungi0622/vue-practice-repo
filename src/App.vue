@@ -34,34 +34,45 @@
             v-model="searchValue"
             :rules="[rules.required, checkInputValueValidation]"
           >
-          </v-text-field>
-        </v-column> 
-        <v-column>
-          <v-btn @click="clickValidationBtn">VALIDATION CHECK</v-btn>
-        </v-column>
-      </v-row>
-      <v-row>
-        서버 내 사용자 정보 리스트 출력 
-        <v-container>
-          <v-data-table
-            :headers="headers"
-            :items="tableListItems"
-            :items-per-page="5"
-            class="elevation-1"
-          >
-          </v-data-table>
-        </v-container>
-      </v-row>
+        </v-text-field>
+      </v-column> 
+      <v-column>
+        <v-btn @click="clickValidationBtn">VALIDATION CHECK</v-btn>
+      </v-column>
+    </v-row>
+    <v-row>
+      서버 내 사용자 정보 리스트 출력 
+      <v-container>
+        <v-data-table
+        :headers="headers"
+        :items="tableListItems"
+        :items-per-page="5"
+        class="elevation-1"
+        >
+      </v-data-table>
     </v-container>
-  </v-app>
+  </v-row>
+  <v-row class="d-flex justify-center align-center">
+    <h1>[Child component value emitting test]</h1>       
+  </v-row>
+  <v-row>
+    <CommonComponent @update-selected-value="updateValueFromChildFunc"/>
+  </v-row>
+  <v-row>
+    {{ updatedValueFromChild }}
+  </v-row>
+</v-container>
+</v-app>
 </template>
 
 <script>
+import CommonComponent from './components/common/commonComponent.vue';
 
 export default {
   name: 'App',
 
   components: {
+    CommonComponent
   },
   mounted() {
     this.fetchInitialEmployeeDataSet();
@@ -81,10 +92,15 @@ export default {
     },
     selectedComboboxValue: '(public) 공용 마트',
     filteredComboboxValue: '',
-    comboBoxItems: ['(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3'],
-    tableListItems: []
+    comboBoxItems: ['(public) 공용 마트' ,'(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3'],
+    tableListItems: [],
+    updatedValueFromChild: ''
   }),
   methods: {
+    updateValueFromChildFunc: function(val) {
+      console.log('[called] updateValueFromChildFunc');
+      this.updatedValueFromChild = val
+    },
     // 우선 기존에 객체 형태로 combobox에 출력하던 부분을 위와 같이 문자열 리스트 형태로
     // Custom한 문자열을 구성하도록 한다.
     // 단, 선택한 item의 값은 API query string의 값으로 넘겨줄때, 아래와 같이 값을 filter해서 보내도록 보내도록 한다.

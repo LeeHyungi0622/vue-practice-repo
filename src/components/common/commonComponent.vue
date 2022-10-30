@@ -19,8 +19,10 @@ export default {
     components: {
 
     },
-
+    
     mounted() {
+        const filteredVal = this.selectedValue.split(' ')[0].replace('(','').replace(')','');
+        this.$emit('update-selected-value', filteredVal + ' [from child component]');
     },
 
     data: () => ({
@@ -31,7 +33,7 @@ export default {
         onSelectionChange: function() {
             // console.log('this.selectedValue :: ', this.selectedValue.split(" ")[0].replace("(", "").replace(")", ""));
             const filteredVal = this.selectedValue.split(' ')[0].replace('(','').replace(')','');
-            
+
             console.log('filteredVal::', filteredVal);
 
             this.$emit('update-selected-value', filteredVal + ' [from child component]');

@@ -61,6 +61,19 @@
   <v-row>
     {{ updatedValueFromChild }}
   </v-row>
+  <v-row>
+    <h1>[click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리</h1>
+  </v-row>
+  <v-row>
+    <v-textarea
+      v-model="queryStatement"
+      :rules="initialRules"
+      ref="queryTextArea"
+    ></v-textarea>
+    <v-btn
+      @click="checkValidation"
+    >check query validation</v-btn>
+  </v-row>
 </v-container>
 </v-app>
 </template>
@@ -79,6 +92,7 @@ export default {
     this.checkExistenceOfEmployee();
   },
   data: () => ({
+    queryStatement: '',
     searchValue: '', 
     headers: [     
       {text: 'ID', value: 'id'}, 
@@ -90,13 +104,46 @@ export default {
     rules: {
       required: value => !!value || '값을 입력해주세요.',
     },
+    initialRules: [],
     selectedComboboxValue: '(public) 공용 마트',
     filteredComboboxValue: '',
     comboBoxItems: ['(public) 공용 마트' ,'(public1) 공용 마트1', '(public2) 공용 마트2', '(public3) 공용 마트3'],
     tableListItems: [],
     updatedValueFromChild: ''
   }),
+  watch: {
+    queryStatement: function() {
+      this.initialRules = [];
+    }
+  },
   methods: {
+    validationFunc: function(val) {
+      console.log('val:', val);
+      if(val == 'hyungi') {
+        return true
+      }
+      return "다시 입력을 해주세요.";
+    },
+    checkValidation() {
+      console.log('checkValidation function');
+      this.initialRules = [
+        (val)=> !!val || '필수 입력 입니다.',
+        (val)=>{
+          if(val == 'hyungi') {
+            return true;
+          } else {
+            return "다시 입력해주세요.";
+          }
+        }
+      ]
+      // this.$refs.queryTextArea.validate();
+      // let self = this;
+      // setTimeout(() => {
+      //   if (self.$refs.queryTextArea.validate()) {
+      //     alert('sumitted');
+      //   }
+      // })
+    },  
     updateValueFromChildFunc: function(val) {
       console.log('[called] updateValueFromChildFunc');
       this.updatedValueFromChild = val

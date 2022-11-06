@@ -96,7 +96,7 @@
       <v-btn @click="openErrorDialog">OPEN Popup Dialog</v-btn>
     </v-row>
   </v-container>
-  <ErrorPopupDialog v-if="isErrorPopupShown" @closeErrorDialog="closeErrorDialog" />
+  <ErrorPopupDialog v-if="isErrorPopupShown" :errorMessage="errorMessage" @closeErrorDialog="closeErrorDialog" />
   
 </v-app>
 </template>
@@ -118,6 +118,7 @@ export default {
   },
   data: () => ({
     errors: [],
+    errorMessage: '',
     isErrorPopupShown: false,
     queryInputStatement: '',
     queryStatement: '',
@@ -187,6 +188,8 @@ export default {
         })
         .catch(error => {
           console.log('CHECK ERROR MESSAGE : ', error.message);
+          this.errorMessage = error.message;
+          this.isErrorPopupShown = true;
         });
     },
     checkInputValidation: function() {

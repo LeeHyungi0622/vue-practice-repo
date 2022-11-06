@@ -203,7 +203,7 @@ export default {
         return;
       }
       // 만약 무언가 입력값이 있다면, 비동기 처리는 나중에 실행되도록 해당 method를 실행시켜준다.
-      this.asyncProcess()
+      this.asyncProcess();
     },
     updateValueFromChildFunc: function(val) {
       console.log('[called] updateValueFromChildFunc');

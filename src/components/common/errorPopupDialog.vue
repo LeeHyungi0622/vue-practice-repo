@@ -2,7 +2,7 @@
     <v-dialog
         class="d-flex justify-center align-center"
         v-model="dialog"
-        width="50%"
+        width="25%"
         height="70%"
     >   
         <v-card

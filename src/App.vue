@@ -63,6 +63,7 @@
     </v-row>
     <v-row>
       <h1>(Example #1)[click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리</h1>
+      <p>:rules properties는 입력 element가 한 번 dirty가 된 상태에서 동적으로 적용된 rule이 적용되어, validation check를 해준다.</p>
     </v-row>
     <v-row>
       <v-textarea
@@ -75,7 +76,8 @@
       >check query validation</v-btn>
     </v-row>
     <v-row>
-      <h1>(Example #2) [click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리(in error-messages properties)</h1>
+      <h1>(Example #2) [click event validation check] error-messages에서 validation check를 클릭시에 될 수 있도록 처리(in error-messages properties)</h1>
+      <p>:error-messages properties는 입력 element의 dirty 유/무와 관계없이, 동적으로 적용된 :error-messages의 속성 errors(validation check method)이 적용되어 검사를 해준다.</p>
     </v-row>
     <v-row>
       <v-textarea
@@ -159,20 +161,29 @@ export default {
       //   }
       // })
     },  
+    // (Example #2 click event validation check)
     asyncProcess: function() {
       this.$axios.get('http://localhost:8080/employee')
         .then(response => {
           console.log('CHECK RESPONSE MESSAGE : ', response);
+          return true;
         })
         .catch(error => {
-          console.log('CHECK ERROR MESSAGE : ', error);
+          console.log('CHECK ERROR MESSAGE : ', error.message);
         });
     },
     checkInputValidation: function() {
+      // 우선 error-messages의 속성으로 들어갈 errors에 규칙을 동적으로 초기화 시켜주고,
       this.errors = [
         (val)=> !!val || '필수 입력 입니다.',
-        this.asyncProcess()
-      ]
+      ];
+      // 입력된 값이 undefined이거나 ""(빈 공백)인 경우, validation 기본 입력에 대한 확인만 해주고 method처리를 끝내도록 한다.
+      if(this.queryInputStatement == undefined || this.queryInputStatement == "") {
+        this.$refs.queryInputTextArea.validate();
+        return;
+      }
+      // 만약 무언가 입력값이 있다면, 비동기 처리는 나중에 실행되도록 해당 method를 실행시켜준다.
+      this.asyncProcess()
     },
     updateValueFromChildFunc: function(val) {
       console.log('[called] updateValueFromChildFunc');

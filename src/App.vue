@@ -89,18 +89,28 @@
         @click="checkInputValidation"
       >check query input validation</v-btn>
     </v-row>
+    <v-row>
+      <h1>POPUP DIALOG 처리 PRACTICE</h1>
+    </v-row>
+    <v-row>
+      <v-btn @click="openErrorDialog">OPEN Popup Dialog</v-btn>
+    </v-row>
   </v-container>
+  <ErrorPopupDialog v-if="isErrorPopupShown" @closeErrorDialog="closeErrorDialog" />
+  
 </v-app>
 </template>
 
 <script>
 import CommonComponent from './components/common/commonComponent.vue';
+import ErrorPopupDialog from './components/common/errorPopupDialog.vue';
 
 export default {
   name: 'App',
 
   components: {
-    CommonComponent
+    CommonComponent,
+    ErrorPopupDialog
   },
   mounted() {
     this.fetchInitialEmployeeDataSet();
@@ -108,6 +118,7 @@ export default {
   },
   data: () => ({
     errors: [],
+    isErrorPopupShown: false,
     queryInputStatement: '',
     queryStatement: '',
     searchValue: '', 
@@ -134,6 +145,12 @@ export default {
     }
   },
   methods: {
+    openErrorDialog: function() {
+      this.isErrorPopupShown = true;
+    },  
+    closeErrorDialog() {
+      this.isErrorPopupShown = false;
+    },  
     validationFunc: function(val) {
       console.log('val:', val);
       if(val == 'hyungi') {

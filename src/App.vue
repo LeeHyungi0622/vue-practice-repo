@@ -43,38 +43,51 @@
     <v-row>
       서버 내 사용자 정보 리스트 출력 
       <v-container>
-        <v-data-table
-        :headers="headers"
-        :items="tableListItems"
-        :items-per-page="5"
-        class="elevation-1"
-        >
-      </v-data-table>
-    </v-container>
-  </v-row>
-  <v-row class="d-flex justify-center align-center">
-    <h1>[Child component value emitting test]</h1>       
-  </v-row>
-  <v-row>
-    <CommonComponent @update-selected-value="updateValueFromChildFunc"/>
-  </v-row>
-  <v-row>
-    {{ updatedValueFromChild }}
-  </v-row>
-  <v-row>
-    <h1>[click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리</h1>
-  </v-row>
-  <v-row>
-    <v-textarea
-      v-model="queryStatement"
-      :rules="initialRules"
-      ref="queryTextArea"
-    ></v-textarea>
-    <v-btn
-      @click="checkValidation"
-    >check query validation</v-btn>
-  </v-row>
-</v-container>
+          <v-data-table
+          :headers="headers"
+          :items="tableListItems"
+          :items-per-page="5"
+          class="elevation-1"
+          >
+        </v-data-table>
+      </v-container>
+    </v-row>
+    <v-row class="d-flex justify-center align-center">
+      <h1>[Child component value emitting test]</h1>       
+    </v-row>
+    <v-row>
+      <CommonComponent @update-selected-value="updateValueFromChildFunc"/>
+    </v-row>
+    <v-row>
+      {{ updatedValueFromChild }}
+    </v-row>
+    <v-row>
+      <h1>(Example #1)[click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리</h1>
+    </v-row>
+    <v-row>
+      <v-textarea
+        v-model="queryStatement"
+        :rules="initialRules"
+        ref="queryTextArea"
+      ></v-textarea>
+      <v-btn
+        @click="checkValidation"
+      >check query validation</v-btn>
+    </v-row>
+    <v-row>
+      <h1>(Example #2) [click event validation check] rules에서 validation check를 클릭시에 될 수 있도록 처리(in error-messages properties)</h1>
+    </v-row>
+    <v-row>
+      <v-textarea
+        v-model="queryInputStatement"
+        ref="queryInputTextArea"
+        :error-messages="errors"
+      ></v-textarea>
+      <v-btn
+        @click="checkInputValidation"
+      >check query input validation</v-btn>
+    </v-row>
+  </v-container>
 </v-app>
 </template>
 
@@ -92,6 +105,8 @@ export default {
     this.checkExistenceOfEmployee();
   },
   data: () => ({
+    errors: [],
+    queryInputStatement: '',
     queryStatement: '',
     searchValue: '', 
     headers: [     
@@ -144,6 +159,21 @@ export default {
       //   }
       // })
     },  
+    asyncProcess: function() {
+      this.$axios.get('http://localhost:8080/employee')
+        .then(response => {
+          console.log('CHECK RESPONSE MESSAGE : ', response);
+        })
+        .catch(error => {
+          console.log('CHECK ERROR MESSAGE : ', error);
+        });
+    },
+    checkInputValidation: function() {
+      this.errors = [
+        (val)=> !!val || '필수 입력 입니다.',
+        this.asyncProcess()
+      ]
+    },
     updateValueFromChildFunc: function(val) {
       console.log('[called] updateValueFromChildFunc');
       this.updatedValueFromChild = val
